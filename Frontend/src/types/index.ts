@@ -1,9 +1,8 @@
 // Course types
 export interface Course {
   id: number;
-  title: string;
-  teacher: string;
-  duration: number;
+  name: string;
+  description: string;
   thumbnail: string;
   slug: string;
   rating_average: number | null;
@@ -20,10 +19,18 @@ export interface Class {
   slug: string;
 }
 
+// Class summary as returned nested inside GET /courses/:slug (id, name, description, slug only)
+export interface CourseClassSummary {
+  id: number;
+  name: string;
+  description: string;
+  slug: string;
+}
+
 // Course Detail type
 export interface CourseDetail extends Course {
-  description: string;
-  classes: Class[];
+  teacher_id: number[];
+  classes: CourseClassSummary[];
 }
 
 // Progress types

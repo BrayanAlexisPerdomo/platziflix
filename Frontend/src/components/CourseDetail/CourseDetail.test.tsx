@@ -11,21 +11,18 @@ vi.mock("next/navigation", () => ({
 describe("CourseDetailComponent", () => {
   const mockCourse: CourseDetail = {
     id: 1,
-    title: "React Fundamentals",
-    teacher: "John Doe",
-    duration: 120,
+    name: "React Fundamentals",
     thumbnail: "https://example.com/thumbnail.jpg",
     slug: "react-fundamentals",
     rating_average: 4.5,
     rating_count: 12,
     description: "Aprende React desde cero",
+    teacher_id: [1],
     classes: [
       {
         id: 1,
-        title: "Clase 1",
+        name: "Clase 1",
         description: "Introducción",
-        video: "https://example.com/video.mp4",
-        duration: 600,
         slug: "clase-1",
       },
     ],
