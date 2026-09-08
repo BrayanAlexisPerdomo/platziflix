@@ -6,6 +6,8 @@ export interface Course {
   duration: number;
   thumbnail: string;
   slug: string;
+  rating_average: number | null;
+  rating_count: number;
 }
 
 // Class types
@@ -46,4 +48,14 @@ export interface Quiz {
 // Favorite types
 export interface FavoriteToggle {
   course_id: number;
+}
+
+// Rating types
+export interface RatingCreate {
+  stars: number;
+}
+
+export interface RatingSummary {
+  rating_average: number | null;
+  rating_count: number;
 }

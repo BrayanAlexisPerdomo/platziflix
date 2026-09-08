@@ -1,5 +1,4 @@
 import { renderToString } from "react-dom/server";
-import { startTransition } from "react";
 import ClassPage from "./page";
 import { Class } from "@/types";
 import { describe, it, expect, vi } from "vitest";
@@ -28,7 +27,7 @@ global.fetch = vi.fn().mockResolvedValue({
 
 describe("ClassPage", () => {
   it("renders class info and video", async () => {
-    const html = await renderToString(<ClassPage params={{ class_id: "19" }} />);
+    const html = await renderToString(<ClassPage params={Promise.resolve({ class_id: "19" })} />);
 
     expect(html).toContain("Clase de Test");
     expect(html).toContain("Descripción de la clase de test");

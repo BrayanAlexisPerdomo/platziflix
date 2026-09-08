@@ -3,9 +3,9 @@ import { CourseDetail } from "@/types";
 import { CourseDetailComponent } from "@/components/CourseDetail/CourseDetail";
 
 interface CoursePageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 async function getCourseData(slug: string): Promise<CourseDetail> {
@@ -25,13 +25,15 @@ async function getCourseData(slug: string): Promise<CourseDetail> {
 }
 
 export default async function CoursePage({ params }: CoursePageProps) {
-  const courseData = await getCourseData(params.slug);
+  const { slug } = await params;
+  const courseData = await getCourseData(slug);
 
   return <CourseDetailComponent course={courseData} />;
 }
 
 export async function generateMetadata({ params }: CoursePageProps) {
-  const courseData = await getCourseData(params.slug);
+  const { slug } = await params;
+  const courseData = await getCourseData(slug);
 
   return {
     title: `${courseData.title} - Curso Online`,

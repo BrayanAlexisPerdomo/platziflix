@@ -1,0 +1,28 @@
+@import '../../styles/vars.scss';
+
+.starRating {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stars {
+  display: inline-flex;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.starFilled {
+  color: color('star');
+}
+
+.starEmpty {
+  color: color('light-gray');
+}
+
+.count {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: color('text-secondary');
+  opacity: 0.8;
+}

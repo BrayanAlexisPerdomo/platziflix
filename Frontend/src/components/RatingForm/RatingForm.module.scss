@@ -1,0 +1,59 @@
+@import '../../styles/vars.scss';
+
+.ratingForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.prompt {
+  font-size: 1rem;
+  font-weight: 600;
+  color: color('text-primary');
+}
+
+.stars {
+  display: inline-flex;
+  gap: 0.25rem;
+}
+
+.starFilled,
+.starEmpty {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.6rem;
+  line-height: 1;
+  padding: 0;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.starFilled {
+  color: color('star');
+}
+
+.starEmpty {
+  color: color('light-gray');
+}
+
+.status {
+  font-size: 0.9rem;
+  color: color('text-secondary');
+  opacity: 0.8;
+}
+
+.success {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: color('text-primary');
+}
+
+.error {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: color('primary');
+}

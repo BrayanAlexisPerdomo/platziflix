@@ -10,6 +10,8 @@ describe("Course Component", () => {
     teacher: "John Doe",
     duration: 120,
     thumbnail: "https://example.com/thumbnail.jpg",
+    rating_average: 4.5,
+    rating_count: 12,
   };
 
   it("renders course information correctly", () => {
@@ -23,6 +25,9 @@ describe("Course Component", () => {
 
     // Check if duration is rendered
     expect(screen.getByText(`Duración: ${mockCourse.duration} minutos`)).toBeDefined();
+
+    // Check if the rating is rendered
+    expect(screen.getByText(`${mockCourse.rating_average.toFixed(1)} (${mockCourse.rating_count} votos)`)).toBeDefined();
   });
 
   it("renders thumbnail with correct alt text", () => {
@@ -45,5 +50,11 @@ describe("Course Component", () => {
     // Check if the course info section exists
     expect(container.querySelector("div > h2")).toBeDefined();
     expect(container.querySelector("div > p")).toBeDefined();
+  });
+
+  it("muestra 'Sin votos aún' cuando el curso no tiene ratings", () => {
+    render(<Course {...mockCourse} rating_average={null} rating_count={0} />);
+
+    expect(screen.getByText("Sin votos aún")).toBeInTheDocument();
   });
 });

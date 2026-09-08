@@ -37,6 +37,8 @@ export default async function Home() {
                 teacher={course.teacher}
                 duration={course.duration}
                 thumbnail={course.thumbnail}
+                rating_average={course.rating_average}
+                rating_count={course.rating_count}
               />
             </Link>
           ))}
