@@ -44,7 +44,7 @@ def create_sample_data():
         course1 = Course(
             name="Curso de React",
             description="Aprende React desde cero hasta convertirte en un desarrollador profesional",
-            thumbnail="https://via.placeholder.com/300x200?text=React+Course",
+            thumbnail="/media/curso-de-react.jpg",
             slug="curso-de-react",
             created_at=datetime.utcnow(),
             updated_at=datetime.utcnow(),
@@ -53,7 +53,7 @@ def create_sample_data():
         course2 = Course(
             name="Curso de Python",
             description="Domina Python y sus frameworks más populares",
-            thumbnail="https://via.placeholder.com/300x200?text=Python+Course",
+            thumbnail="/media/curso-de-python.jpg",
             slug="curso-de-python",
             created_at=datetime.utcnow(),
             updated_at=datetime.utcnow(),
@@ -62,7 +62,7 @@ def create_sample_data():
         course3 = Course(
             name="Curso de JavaScript",
             description="JavaScript moderno y sus mejores prácticas",
-            thumbnail="https://via.placeholder.com/300x200?text=JavaScript+Course",
+            thumbnail="/media/curso-de-javascript.jpg",
             slug="curso-de-javascript",
             created_at=datetime.utcnow(),
             updated_at=datetime.utcnow(),

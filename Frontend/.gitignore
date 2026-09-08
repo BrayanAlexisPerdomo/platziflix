@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 
+# local course images (not committed)
+/public/media/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
