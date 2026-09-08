@@ -23,10 +23,17 @@ class Course(BaseModel):
     
     # One-to-many relationship with Lesson
     lessons = relationship(
-        "Lesson", 
+        "Lesson",
         back_populates="course",
         cascade="all, delete-orphan"
     )
-    
+
+    # One-to-many relationship with Rating
+    ratings = relationship(
+        "Rating",
+        back_populates="course",
+        cascade="all, delete-orphan"
+    )
+
     def __repr__(self):
         return f"<Course(id={self.id}, name='{self.name}', slug='{self.slug}')>" 

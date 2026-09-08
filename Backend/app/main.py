@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.db.base import engine, get_db
 from app.services.course_service import CourseService
+from app.schemas.rating import RatingCreate
 
 app = FastAPI(title=settings.project_name, version=settings.version)
 
@@ -70,8 +71,26 @@ def get_course_by_slug(slug: str, course_service: CourseService = Depends(get_co
     Returns course information including teachers and classes.
     """
     course = course_service.get_course_by_slug(slug)
-    
+
     if not course:
         raise HTTPException(status_code=404, detail="Course not found")
-    
+
     return course
+
+
+@app.post("/courses/{slug}/ratings", status_code=201)
+def add_rating(
+    slug: str,
+    rating: RatingCreate,
+    course_service: CourseService = Depends(get_course_service)
+) -> dict:
+    """
+    Register a rating (1-5 stars) for a course.
+    Returns the updated rating_average and rating_count.
+    """
+    result = course_service.add_rating(slug, rating.stars)
+
+    if result is None:
+        raise HTTPException(status_code=404, detail="Course not found")
+
+    return result

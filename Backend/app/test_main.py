@@ -12,14 +12,18 @@ MOCK_COURSES_LIST = [
         "name": "Curso de React",
         "description": "Aprende React desde cero",
         "thumbnail": "https://via.placeholder.com/150",
-        "slug": "curso-de-react"
+        "slug": "curso-de-react",
+        "rating_average": 4.5,
+        "rating_count": 12
     },
     {
         "id": 2,
         "name": "Curso de Python",
         "description": "Domina Python paso a paso",
         "thumbnail": "https://via.placeholder.com/200",
-        "slug": "curso-de-python"
+        "slug": "curso-de-python",
+        "rating_average": None,
+        "rating_count": 0
     }
 ]
 
@@ -29,6 +33,8 @@ MOCK_COURSE_DETAIL = {
     "description": "Aprende React desde cero",
     "thumbnail": "https://via.placeholder.com/150",
     "slug": "curso-de-react",
+    "rating_average": 4.5,
+    "rating_count": 12,
     "teacher_id": [1, 2],
     "classes": [
         {
@@ -129,13 +135,17 @@ class TestCoursesEndpoints:
             assert "description" in course
             assert "thumbnail" in course
             assert "slug" in course
-            
+            assert "rating_average" in course
+            assert "rating_count" in course
+
             # Verify field types
             assert isinstance(course["id"], int)
             assert isinstance(course["name"], str)
             assert isinstance(course["description"], str)
             assert isinstance(course["thumbnail"], str)
             assert isinstance(course["slug"], str)
+            assert course["rating_average"] is None or isinstance(course["rating_average"], float)
+            assert isinstance(course["rating_count"], int)
         
         # Verify mock was called
         mock_course_service.get_all_courses.assert_called_once()
@@ -167,15 +177,19 @@ class TestCoursesEndpoints:
         assert "description" in data
         assert "thumbnail" in data
         assert "slug" in data
+        assert "rating_average" in data
+        assert "rating_count" in data
         assert "teacher_id" in data
         assert "classes" in data
-        
+
         # Verify field types
         assert isinstance(data["id"], int)
         assert isinstance(data["name"], str)
         assert isinstance(data["description"], str)
         assert isinstance(data["thumbnail"], str)
         assert isinstance(data["slug"], str)
+        assert data["rating_average"] is None or isinstance(data["rating_average"], float)
+        assert isinstance(data["rating_count"], int)
         assert isinstance(data["teacher_id"], list)
         assert isinstance(data["classes"], list)
         
@@ -229,7 +243,7 @@ class TestContractCompliance:
         response = client.get("/courses")
         data = response.json()
         
-        expected_fields = {"id", "name", "description", "thumbnail", "slug"}
+        expected_fields = {"id", "name", "description", "thumbnail", "slug", "rating_average", "rating_count"}
         
         for course in data:
             # Verify no extra fields beyond contract
@@ -244,7 +258,7 @@ class TestContractCompliance:
         data = response.json()
         
         # Verify main course fields
-        expected_course_fields = {"id", "name", "description", "thumbnail", "slug", "teacher_id", "classes"}
+        expected_course_fields = {"id", "name", "description", "thumbnail", "slug", "rating_average", "rating_count", "teacher_id", "classes"}
         actual_course_fields = set(data.keys())
         assert actual_course_fields == expected_course_fields
         
@@ -262,13 +276,15 @@ class TestContractCompliance:
                 "name": "Curso de React",
                 "description": "Curso de React",
                 "thumbnail": "https://via.placeholder.com/150",
-                "slug": "curso-de-react"
+                "slug": "curso-de-react",
+                "rating_average": 4.5,
+                "rating_count": 12
             }
         ]
-        
+
         response = client.get("/courses")
         data = response.json()
-        
+
         # Verify the response matches the exact contract structure
         assert len(data) == 1
         course = data[0]
@@ -276,4 +292,43 @@ class TestContractCompliance:
         assert course["name"] == "Curso de React"
         assert course["description"] == "Curso de React"
         assert course["thumbnail"] == "https://via.placeholder.com/150"
-        assert course["slug"] == "curso-de-react" 
+        assert course["slug"] == "curso-de-react"
+        assert course["rating_average"] == 4.5
+        assert course["rating_count"] == 12
+
+
+class TestRatingsEndpoint:
+    """Tests for POST /courses/{slug}/ratings"""
+
+    def test_add_rating_success(self, client, mock_course_service):
+        """Test POST /courses/{slug}/ratings with valid stars returns 201 and the updated aggregate"""
+        mock_course_service.add_rating.return_value = {"rating_average": 4.5, "rating_count": 12}
+
+        response = client.post("/courses/curso-de-react/ratings", json={"stars": 5})
+        assert response.status_code == 201
+        assert response.json() == {"rating_average": 4.5, "rating_count": 12}
+
+        mock_course_service.add_rating.assert_called_once_with("curso-de-react", 5)
+
+    def test_add_rating_course_not_found(self, client, mock_course_service):
+        """Test POST /courses/{slug}/ratings with a nonexistent slug returns 404"""
+        mock_course_service.add_rating.return_value = None
+
+        response = client.post("/courses/nonexistent-course/ratings", json={"stars": 5})
+        assert response.status_code == 404
+        assert response.json() == {"detail": "Course not found"}
+
+        mock_course_service.add_rating.assert_called_once_with("nonexistent-course", 5)
+
+    @pytest.mark.parametrize("payload", [
+        {"stars": 0},
+        {"stars": 6},
+        {"stars": "abc"},
+        {},
+    ])
+    def test_add_rating_invalid_stars_returns_422(self, client, mock_course_service, payload):
+        """Test POST /courses/{slug}/ratings rejects out-of-range, wrong-type, or missing stars before reaching the service"""
+        response = client.post("/courses/curso-de-react/ratings", json=payload)
+        assert response.status_code == 422
+
+        mock_course_service.add_rating.assert_not_called()

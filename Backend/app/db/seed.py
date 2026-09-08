@@ -6,7 +6,7 @@ This script creates sample data for testing and development.
 from datetime import datetime
 from sqlalchemy.orm import Session
 from app.db.base import SessionLocal
-from app.models import Teacher, Course, Lesson, course_teachers
+from app.models import Teacher, Course, Lesson, course_teachers, Rating
 from app.core.config import settings
 
 
@@ -144,10 +144,39 @@ def create_sample_data():
 
         db.commit()
 
+        # Create sample ratings (mixed values so averages aren't trivial)
+        ratings_data = [
+            # React course ratings -> avg 4.2
+            {"course": course1, "stars": 5},
+            {"course": course1, "stars": 4},
+            {"course": course1, "stars": 5},
+            {"course": course1, "stars": 3},
+            {"course": course1, "stars": 4},
+            # Python course ratings -> avg 3.0
+            {"course": course2, "stars": 3},
+            {"course": course2, "stars": 2},
+            {"course": course2, "stars": 4},
+            # JavaScript course ratings -> avg 4.0
+            {"course": course3, "stars": 4},
+            {"course": course3, "stars": 4},
+        ]
+
+        for rating_data in ratings_data:
+            rating = Rating(
+                course_id=rating_data["course"].id,
+                stars=rating_data["stars"],
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow(),
+            )
+            db.add(rating)
+
+        db.commit()
+
         print("✅ Sample data created successfully!")
         print(f"   - Created {len([teacher1, teacher2, teacher3])} teachers")
         print(f"   - Created {len([course1, course2, course3])} courses")
         print(f"   - Created {len(lessons_data)} lessons")
+        print(f"   - Created {len(ratings_data)} ratings")
 
     except Exception as e:
         db.rollback()
@@ -164,6 +193,7 @@ def clear_all_data():
     try:
         # Delete in reverse order to avoid foreign key constraints
         db.query(Lesson).delete()
+        db.query(Rating).delete()
         db.execute(course_teachers.delete())
         db.query(Course).delete()
         db.query(Teacher).delete()

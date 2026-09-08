@@ -6,13 +6,15 @@ from .teacher import Teacher
 from .course import Course
 from .lesson import Lesson
 from .course_teacher import course_teachers
+from .rating import Rating
 
 # Export all models for easy importing
 __all__ = [
     'BaseModel',
-    'Base', 
+    'Base',
     'Teacher',
     'Course',
     'Lesson',
-    'course_teachers'
+    'course_teachers',
+    'Rating'
 ] 

@@ -85,6 +85,8 @@ plataforma online de cursos, cada cursos tiene clases, descripciones y no hay mu
         "description": "Curso de React",
         "thumbnail": "https://via.placeholder.com/150", 
         "slug": "curso-de-react",
+        "rating_average": 4.5,
+        "rating_count": 12,
     }
 ]
 ```
@@ -97,6 +99,8 @@ plataforma online de cursos, cada cursos tiene clases, descripciones y no hay mu
     "description": "Curso de React",
     "thumbnail": "https://via.placeholder.com/150", 
     "slug": "curso-de-react",
+    "rating_average": 4.5,
+    "rating_count": 12,
     "teacher_id": [1, 2, 3],
     "classes": [
         {
@@ -121,3 +125,24 @@ plataforma online de cursos, cada cursos tiene clases, descripciones y no hay mu
     "deleted_at": "2021-01-01"
 }
 ```
+
+- POST /courses/:slug/ratings -> Registrar un rating (1-5 estrellas) para un curso
+
+Request:
+```json
+{
+    "stars": 5
+}
+```
+
+Response (201):
+```json
+{
+    "rating_average": 4.5,
+    "rating_count": 12
+}
+```
+
+Errores:
+- 404: el `slug` no corresponde a ningún curso existente.
+- 422: `stars` fuera del rango 1-5, de tipo inválido, o ausente.
