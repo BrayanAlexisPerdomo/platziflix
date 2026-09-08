@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 from app.core.config import settings
@@ -7,6 +8,13 @@ from app.services.course_service import CourseService
 from app.schemas.rating import RatingCreate
 
 app = FastAPI(title=settings.project_name, version=settings.version)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def get_course_service(db: Session = Depends(get_db)) -> CourseService:
